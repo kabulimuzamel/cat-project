@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
- 
-const fetchAPI = (api, setter) => {
-    fetch(api)
-        .then(res => res.json())
-        .then(res => setter(res))
-        .catch(err => setter(err.message))
-}
+import { inputMatchFinder, fetchAPI } from "../Functions/functions";
+
 
 export const useAsync = (api, fetchAgain, dependecies) => {
     const [data, setData] = useState([]);
@@ -13,4 +8,12 @@ export const useAsync = (api, fetchAgain, dependecies) => {
         if(!data.length || fetchAgain) fetchAPI(api, setData);
     }, [dependecies])
     return [data];
+}
+
+export const useAutoCompleteSearchResults = (breeds, input) => {
+    const [searchedResults, setSearchResults] = useState([]);
+    useEffect(() => {
+        if(breeds.length) inputMatchFinder(setSearchResults, breeds, input, 'name')
+    } ,[breeds, input]);
+    return [searchedResults]
 }
